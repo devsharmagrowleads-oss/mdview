@@ -187,6 +187,68 @@ fn print_page(window: tauri::WebviewWindow) -> Result<(), String> {
     window.print().map_err(|e| e.to_string())
 }
 
+/// The stock macOS menu's Quit item ends the process immediately, without
+/// giving the window a chance to ask about unsaved changes. This menu's Quit
+/// (Cmd+Q) closes the window instead, which runs the same "Save changes?"
+/// flow as the red close button; the app exits once the window is gone.
+#[cfg(target_os = "macos")]
+fn install_mac_menu(app: &AppHandle) -> tauri::Result<()> {
+    use tauri::menu::{AboutMetadata, MenuBuilder, MenuItemBuilder, SubmenuBuilder};
+
+    let about = AboutMetadata {
+        name: Some("MDView".into()),
+        version: Some(app.package_info().version.to_string()),
+        authors: Some(vec!["Dev Sharma".into()]),
+        comments: Some("MDView is made by Dev Sharma".into()),
+        ..Default::default()
+    };
+    let quit = MenuItemBuilder::with_id("quit", "Quit MDView")
+        .accelerator("Cmd+Q")
+        .build(app)?;
+    let app_menu = SubmenuBuilder::new(app, "MDView")
+        .about(Some(about))
+        .separator()
+        .services()
+        .separator()
+        .hide()
+        .hide_others()
+        .show_all()
+        .separator()
+        .item(&quit)
+        .build()?;
+    // Without an Edit menu, Cmd+C / Cmd+V / Cmd+Z do nothing in a macOS webview.
+    let edit_menu = SubmenuBuilder::new(app, "Edit")
+        .undo()
+        .redo()
+        .separator()
+        .cut()
+        .copy()
+        .paste()
+        .select_all()
+        .build()?;
+    let window_menu = SubmenuBuilder::new(app, "Window")
+        .minimize()
+        .maximize()
+        .fullscreen()
+        .build()?;
+    let menu = MenuBuilder::new(app)
+        .items(&[&app_menu, &edit_menu, &window_menu])
+        .build()?;
+    app.set_menu(menu)?;
+
+    app.on_menu_event(|app, event| {
+        if event.id().as_ref() == "quit" {
+            match app.get_webview_window("main") {
+                Some(window) => {
+                    let _ = window.close();
+                }
+                None => app.exit(0),
+            }
+        }
+    });
+    Ok(())
+}
+
 pub fn run() {
     let app = tauri::Builder::default()
         // Must be registered first: a second launch (double-clicking another
@@ -202,6 +264,8 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .manage(Pending::default())
         .setup(|app| {
+            #[cfg(target_os = "macos")]
+            install_mac_menu(app.handle())?;
             let cwd = std::env::current_dir().unwrap_or_default();
             let files = files_from_args(std::env::args(), &cwd);
             app.state::<Pending>().0.lock().unwrap().extend(files);
