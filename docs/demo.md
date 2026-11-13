@@ -23,14 +23,14 @@ A short plan for shipping **Atlas 2.0**. This file is plain Markdown: MDView sho
 | Docs review | Marco | 11 March | In progress |
 | Public launch | Team | 18 March | Planned |
 
-## Install snippet
+## Word count script
 
 ```python
-from atlas import Client
+from pathlib import Path
 
-client = Client(api_key="YOUR_KEY")
-for city in client.search("coffee", near="Lisbon"):
-    print(city.name, city.rating)
+for note in sorted(Path("notes").glob("*.md")):
+    words = len(note.read_text().split())
+    print(f"{note.name}: {words} words")
 ```
 
 > Ship small, ship often. Every release should be boring.
