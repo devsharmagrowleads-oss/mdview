@@ -143,7 +143,7 @@ On macOS use <kbd>Cmd</kbd> in place of <kbd>Ctrl</kbd>.
 
 ## 🛠️ Build it yourself
 
-You need [Node.js](https://nodejs.org), [Rust](https://rustup.rs) and the [Tauri prerequisites](https://tauri.app/start/prerequisites/) for your system.
+You need [Node.js](https://nodejs.org) 20.19 or newer on the 20.x line, or 22.12 or newer (required by the Vite version this project uses), [Rust](https://rustup.rs) and the [Tauri prerequisites](https://tauri.app/start/prerequisites/) for your system.
 
 ```sh
 npm install
