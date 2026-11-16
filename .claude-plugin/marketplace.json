@@ -1,0 +1,17 @@
+{
+  "name": "mdview",
+  "owner": {
+    "name": "Dev Sharma"
+  },
+  "metadata": {
+    "description": "Open the Markdown files Claude Code writes in MDView."
+  },
+  "plugins": [
+    {
+      "name": "mdview",
+      "source": "./integrations/claude-code",
+      "description": "Every .md file Claude Code writes or edits opens in MDView, formatted. Adds MDView's MCP tools and a /mdview command.",
+      "category": "productivity"
+    }
+  ]
+}

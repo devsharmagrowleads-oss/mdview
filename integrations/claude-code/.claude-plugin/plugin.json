@@ -1,0 +1,12 @@
+{
+  "name": "mdview",
+  "version": "0.2.0",
+  "description": "Every .md file Claude Code writes or edits opens in MDView, formatted. Adds MDView's MCP tools and a /mdview command.",
+  "author": {
+    "name": "Dev Sharma"
+  },
+  "homepage": "https://github.com/devsharmagrowleads-oss/mdview",
+  "repository": "https://github.com/devsharmagrowleads-oss/mdview",
+  "license": "MIT",
+  "keywords": ["markdown", "viewer", "preview"]
+}
