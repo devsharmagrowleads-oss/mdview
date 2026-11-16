@@ -21,6 +21,7 @@
 <p align="center">
   <a href="#-download">Download</a> ·
   <a href="#-features">Features</a> ·
+  <a href="#-for-ai-agents">For AI agents</a> ·
   <a href="#-how-to-use">How to use</a> ·
   <a href="#%EF%B8%8F-keyboard-shortcuts">Shortcuts</a> ·
   <a href="#-good-to-know">Good to know</a>
@@ -73,6 +74,15 @@ Newer versions, when there are any, are on the [releases page](https://github.co
 | 🧱 **Rich Markdown** | Tables, task lists, highlighted code, math, quotes and local images. |
 | 🧾 **Front matter** | YAML at the top of a file is tucked into a panel and saved back untouched. |
 | 🔒 **Private** | Fully offline. Web images are never fetched, so opening a file tells no one. |
+| 🤖 **AI agent integration** | Claude Code, Codex and Gemini CLI open the Markdown they write in MDView. One click in Settings. |
+| 👀 **Watched folders** | Point MDView at a project and new or changed `.md` files open as they are written. |
+| 🟩 **What changed** | When a file is rewritten, the changed parts are highlighted, with **Next** to step through them. |
+| 📊 **Diagrams** | ` ```mermaid ` blocks are drawn as diagrams. |
+| 🧮 **Sort and filter tables** | Hover a table and press **Sort & filter**; copy the result as CSV. The file is not changed. |
+| 📤 **Export** | Copy formatted for Gmail, Docs or Slack, or save as HTML, Word (.docx) or PDF. |
+| 🔗 **Clickable file names** | `` `src/app.ts:42` `` in a document opens in VS Code at that line; `` `notes.md` `` opens in a tab. |
+| ⌨️ **`mdview` command** | `mdview notes.md`, `mdview --watch`, Explorer right-click menus and `mdview://` links. |
+| ⬆️ **Updates** | MDView tells you when a new version is out and installs it for you. |
 
 ### Read
 
@@ -102,6 +112,32 @@ Press **Edit** and the page becomes editable, with a formatting bar for headings
   <img src="docs/screenshots/start-dark.png" alt="MDView start screen with Open file and New document buttons" width="860" />
 </p>
 
+## 🤖 For AI agents
+
+AI coding agents write plans, reports and notes as Markdown and print the file name in the terminal. MDView opens those files for you, formatted, as soon as they are written.
+
+1. Open **Settings** (gear icon, <kbd>Ctrl</kbd> <kbd>,</kbd>) and press **Connect** next to your agent.
+
+   | Agent | What happens |
+   | --- | --- |
+   | **Claude Code** | Every `.md` file it writes or edits opens in MDView. A `/mdview` command is added too. |
+   | **Codex**, **Gemini CLI** | The agent is told to open the Markdown it writes in MDView, and gets MDView's MCP tools. |
+   | **Anything else** | Watch the project folder (**Activity → Add**, `mdview --watch`, or right-click a folder → **Watch with MDView**). |
+
+2. Make MDView your default app for `.md` files (MDView offers this on first start). Then <kbd>Ctrl</kbd> + click on a file name in the terminal opens it here too.
+
+When an agent edits a file that is already open, MDView reloads it and highlights what changed. **Activity** lists everything agents wrote recently.
+
+Claude Code users can also install the plugin:
+
+```
+/plugin install mdview --marketplace devsharmagrowleads-oss/mdview
+```
+
+On older versions of Claude Code: `/plugin marketplace add devsharmagrowleads-oss/mdview`, then `/plugin install mdview@mdview`.
+
+Any MCP client (Cursor, Windsurf, Claude Desktop) can use `mdview --mcp`, which offers `open_markdown`, `show_markdown` and `watch_folder`. Details are in [integrations/README.md](integrations/README.md).
+
 ## 🚀 How to use
 
 1. **Install it.** Download the file for your computer from the table above and run it.
@@ -109,7 +145,8 @@ Press **Edit** and the page becomes editable, with a formatting bar for headings
    If `.md` files still open in another app, right-click one, choose **Open with**, pick MDView and tick **Always**.
 3. **Read.** Use **Outline** to jump between sections and **Find** to search. **Dark** / **Light** switches the theme.
 4. **Edit.** Press **Edit**, then type. Use the formatting bar, or type `/` on an empty line for a menu of blocks. Press **Save** when you are done; a dot on the tab means there are unsaved changes.
-5. **Share.** Press **PDF / Print** and choose "Save as PDF" in the print dialog to get a PDF.
+5. **Share.** Press **Export** to copy the document formatted for email or chat, or save it as HTML, Word or PDF.
+6. **Paste to open.** Copy a file path or some Markdown and press <kbd>Ctrl</kbd> <kbd>V</kbd> in MDView (outside edit mode), or <kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>M</kbd> from any app (macOS: <kbd>Control</kbd> <kbd>Option</kbd> <kbd>M</kbd>).
 
 Working alongside an AI tool? Leave the file open in MDView. Each time the tool rewrites it, the view updates on its own.
 
@@ -128,6 +165,8 @@ On macOS use <kbd>Cmd</kbd> in place of <kbd>Ctrl</kbd>.
 | Find | <kbd>Ctrl</kbd> <kbd>F</kbd>, then <kbd>Enter</kbd> / <kbd>Shift</kbd> <kbd>Enter</kbd> |
 | Show or hide the outline | <kbd>Ctrl</kbd> <kbd>\</kbd> |
 | PDF / Print | <kbd>Ctrl</kbd> <kbd>P</kbd> |
+| Settings | <kbd>Ctrl</kbd> <kbd>,</kbd> |
+| Open the path or Markdown on the clipboard (from any app) | <kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>M</kbd> (macOS: <kbd>Control</kbd> <kbd>Option</kbd> <kbd>M</kbd>) |
 | Close the tab | <kbd>Ctrl</kbd> <kbd>W</kbd> |
 | Next / previous tab | <kbd>Ctrl</kbd> <kbd>Tab</kbd> / <kbd>Ctrl</kbd> <kbd>Shift</kbd> <kbd>Tab</kbd> |
 | Follow a link while editing | <kbd>Ctrl</kbd> + click |
@@ -135,7 +174,9 @@ On macOS use <kbd>Cmd</kbd> in place of <kbd>Ctrl</kbd>.
 ## 💡 Good to know
 
 - **A file you only view is never changed.** Saving an edited file rewrites its Markdown in a consistent style (table columns are padded to line up, for example). The content stays the same; the raw text can differ slightly.
-- **Web images are left blank.** MDView never goes online, so only images stored on your computer are shown.
+- **Web images are left blank.** MDView never goes online to show a document, so only images stored on your computer are shown. The only network request MDView makes is the update check, which you can turn off in Settings.
+- **Connecting an agent edits its config file.** MDView backs the file up once (`*.mdview-backup`) and **Disconnect** removes exactly what it added.
+- **Word export** carries the formatted page inside the .docx; Word converts it when the file is opened. Other word processors may not show it.
 - **Raw HTML is shown as text,** not rendered.
 - **Pasting an image into a document is not supported yet.**
 - **Files that are not UTF-8 text open read-only,** so they cannot be damaged.
@@ -151,11 +192,14 @@ npm run app:dev      # run the app with hot reload
 npm run app:build    # build the installer for the system you are on
 ```
 
-Pushing a version tag such as `v0.2.0` makes GitHub Actions build the installers for all three systems and attach them to a draft release.
+Pushing a version tag such as `v0.2.0` makes GitHub Actions build the installers for all three systems and attach them to a draft release. See [docs/RELEASING.md](docs/RELEASING.md) for signing and package managers.
 
 ```
 index.html, src/     the interface (TypeScript, Milkdown Crepe editor)
-src-tauri/           the desktop shell (Rust): files, file associations, single window
+src-tauri/           the desktop shell (Rust): files, file associations, single window,
+                     command line, MCP server, folder watching, agent connections
+integrations/        Claude Code plugin and agent setup notes
+packaging/           winget / Scoop / Homebrew manifest generator
 docs/                logo, screenshots and the demo document shown above
 ```
 
